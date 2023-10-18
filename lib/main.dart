@@ -28,10 +28,11 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 11, 239, 49)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: '丘的网球demo页'),
+      home: const MyHomePage(title: '丘的网球/首页'),
     );
   }
 }
@@ -112,14 +113,36 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const Echo(text: '我不认识你'),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_a_photo_rounded),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class Echo extends StatelessWidget {
+  const Echo({
+    Key? key,
+    required this.text,
+    this.backgroundColor = const Color.fromARGB(255, 127, 12, 199), //默认为灰色
+  }) : super(key: key);
+
+  final String text;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        color: backgroundColor,
+        child: Text(text, style: const TextStyle(color: Colors.white)),
+      ),
     );
   }
 }

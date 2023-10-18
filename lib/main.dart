@@ -107,13 +107,25 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              '你好吗？Jeff无情吗',
+              '这是丘的网球首页',
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const Echo(text: '我不认识你'),
+            TextButton(
+              child: const Text("打开即时排名"),
+              onPressed: () {
+                //导航到新路由   
+                Navigator.push( 
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return const NewRoute();
+                  }),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -142,6 +154,23 @@ class Echo extends StatelessWidget {
       child: Container(
         color: backgroundColor,
         child: Text(text, style: const TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+}
+
+class NewRoute extends StatelessWidget {
+  const NewRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("即时排名"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: const Center(
+        child: Text("新页面了"),
       ),
     );
   }

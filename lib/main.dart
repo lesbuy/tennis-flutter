@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:coric_tennis/components/iconfont.dart';
+import 'package:coric_tennis/body_pages/player.dart';
+import 'package:coric_tennis/body_pages/rank.dart';
+import 'package:coric_tennis/body_pages/setting.dart';
+import 'package:coric_tennis/body_pages/tour.dart';
+import 'package:coric_tennis/body_pages/default.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +39,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _tabIndex = 0;
 
-  void _onItemTapped(int index) {
+  void _onChooseItem(int index) {
     setState(() {
       _tabIndex = index;
     });
@@ -48,20 +53,20 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
+              icon: const Icon(IconFont.single),
+              onPressed: () => _onChooseItem(1),
+            ),
+            IconButton(
               icon: const Icon(IconFont.rank),
-              onPressed: () => _onItemTapped(1),
+              onPressed: () => _onChooseItem(2),
             ),
             IconButton(
               icon: const Icon(IconFont.trophy),
-              onPressed: () => _onItemTapped(2),
+              onPressed: () => _onChooseItem(3),
             ),
             IconButton(
-              icon: const Icon(IconFont.single),
-              onPressed: () => _onItemTapped(3),
-            ),
-            IconButton(
-              icon: const Icon(IconFont.refresh),
-              onPressed: () => _onItemTapped(4),
+              icon: const Icon(IconFont.profile),
+              onPressed: () => _onChooseItem(4),
             ),
           ],
         )
@@ -92,90 +97,5 @@ class _BodyState extends State<Body> {
     } else {
       return const DefaultPage();
     }
-  }
-}
-
-class Player extends StatefulWidget {
-  const Player({Key? key}) : super(key: key);
-  @override
-  State<Player> createState() => _PlayerState();
-}
-
-class _PlayerState extends State<Player> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "球员页面",
-      ),
-    );
-  }
-}
-
-class Rank extends StatefulWidget {
-  const Rank({Key? key}) : super(key: key);
-  @override
-  State<Rank> createState() => _RankState();
-}
-
-class _RankState extends State<Rank> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "排名页面",
-      ),
-    );
-  }
-}
-
-class Tour extends StatefulWidget {
-  const Tour({Key? key}) : super(key: key);
-  @override
-  State<Tour> createState() => _TourState();
-}
-
-class _TourState extends State<Tour> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "赛事页面",
-      ),
-    );
-  }
-}
-
-class Setting extends StatefulWidget {
-  const Setting({Key? key}) : super(key: key);
-  @override
-  State<Setting> createState() => _SettingState();
-}
-
-class _SettingState extends State<Setting> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "设置页面",
-      ),
-    );
-  }
-}
-
-class DefaultPage extends StatefulWidget {
-  const DefaultPage({Key? key}) : super(key: key);
-  @override
-  State<DefaultPage> createState() => _DefaultPageState();
-}
-
-class _DefaultPageState extends State<DefaultPage> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "默认页面",
-      ),
-    );
   }
 }

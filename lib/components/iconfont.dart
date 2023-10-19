@@ -15,4 +15,8 @@ class IconFont {
       IconData(0xe618, fontFamily: 'iconfont', matchTextDirection: true);
   static const IconData refresh =
       IconData(0xe656, fontFamily: 'iconfont', matchTextDirection: true);
+  static const IconData profile =
+      IconData(0xe61a, fontFamily: 'iconfont', matchTextDirection: true);
+  static const IconData schedule =
+      IconData(0xe637, fontFamily: 'iconfont', matchTextDirection: true);
 }

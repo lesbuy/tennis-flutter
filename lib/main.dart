@@ -152,6 +152,7 @@ class Echo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        padding: const EdgeInsets.all(18),
         color: backgroundColor,
         child: Text(text, style: const TextStyle(color: Colors.white)),
       ),

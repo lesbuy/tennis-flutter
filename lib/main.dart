@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:coric_tennis/components/iconfont.dart';
+import 'package:coric_tennis/components/global.dart';
+
 import 'package:coric_tennis/body_pages/player.dart';
 import 'package:coric_tennis/body_pages/rank.dart';
 import 'package:coric_tennis/body_pages/setting.dart';
 import 'package:coric_tennis/body_pages/tour.dart';
 import 'package:coric_tennis/body_pages/default.dart';
+import 'package:coric_tennis/components/loading.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LoadingProvider(), // 创建LoadingProvider
+      child: const MyApp(),
+    ),
+  );
 }
 
 // root
@@ -53,25 +62,30 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
+              isSelected: _tabIndex == 1,
               icon: const Icon(IconFont.single),
               onPressed: () => _onChooseItem(1),
             ),
             IconButton(
+              isSelected: _tabIndex == 2,
               icon: const Icon(IconFont.rank),
               onPressed: () => _onChooseItem(2),
             ),
             IconButton(
+              isSelected: _tabIndex == 3,
               icon: const Icon(IconFont.trophy),
               onPressed: () => _onChooseItem(3),
             ),
             IconButton(
+              isSelected: _tabIndex == 4,
               icon: const Icon(IconFont.profile),
               onPressed: () => _onChooseItem(4),
             ),
           ],
         )
       ],
-      body: Body(tabIndex: _tabIndex),
+      body:
+          Stack(children: [Body(tabIndex: _tabIndex), const LoadingOverlay()]),
     );
   }
 }

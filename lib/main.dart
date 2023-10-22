@@ -7,6 +7,7 @@ import 'package:coric_tennis/body_pages/player.dart';
 import 'package:coric_tennis/body_pages/rank.dart';
 import 'package:coric_tennis/body_pages/setting.dart';
 import 'package:coric_tennis/body_pages/tour.dart';
+import 'package:coric_tennis/body_pages/score.dart';
 import 'package:coric_tennis/body_pages/default.dart';
 import 'package:coric_tennis/components/loading.dart';
 
@@ -63,23 +64,28 @@ class _HomeState extends State<Home> {
           children: [
             IconButton(
               isSelected: _tabIndex == 1,
-              icon: const Icon(IconFont.single),
+              icon: const Icon(IconFont.player),
               onPressed: () => _onChooseItem(1),
             ),
             IconButton(
               isSelected: _tabIndex == 2,
-              icon: const Icon(IconFont.rank),
+              icon: const Icon(IconFont.trophy),
               onPressed: () => _onChooseItem(2),
             ),
             IconButton(
               isSelected: _tabIndex == 3,
-              icon: const Icon(IconFont.trophy),
+              icon: const Icon(IconFont.score),
               onPressed: () => _onChooseItem(3),
             ),
             IconButton(
               isSelected: _tabIndex == 4,
-              icon: const Icon(IconFont.profile),
+              icon: const Icon(IconFont.rank),
               onPressed: () => _onChooseItem(4),
+            ),
+            IconButton(
+              isSelected: _tabIndex == 5,
+              icon: const Icon(IconFont.profile),
+              onPressed: () => _onChooseItem(5),
             ),
           ],
         )
@@ -103,10 +109,12 @@ class _BodyState extends State<Body> {
     if (widget.tabIndex == 1) {
       return const Player();
     } else if (widget.tabIndex == 2) {
-      return const Rank();
-    } else if (widget.tabIndex == 3) {
       return const Tour();
+    } else if (widget.tabIndex == 3) {
+      return const Score();
     } else if (widget.tabIndex == 4) {
+      return const Rank();
+    } else if (widget.tabIndex == 5) {
       return const Setting();
     } else {
       return const DefaultPage();

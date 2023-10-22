@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:coric_tennis/components/http.dart';
 import 'package:coric_tennis/components/loading.dart';
 import 'package:coric_tennis/components/assets.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class Player extends StatefulWidget {
   const Player({Key? key}) : super(key: key);
@@ -59,7 +60,9 @@ class _PlayerState extends State<Player> {
             return Column(
               children: [
                 SizedBox(
-                  child: Image.network(ImgPt(item["pid"]),
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: ImgPt(item["pid"]),
                       width: 100, height: 100),
                 ),
                 Text(item["eng_name"]),
@@ -86,7 +89,7 @@ class _PlayerState extends State<Player> {
         children: <Widget>[
           AppBar(
             //导航栏
-            title: Text("Top10"),
+            title: Text("PLAYERS"),
             backgroundColor: Colors.amber[400],
           ),
           top10Block,

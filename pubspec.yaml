@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.3
+  transparent_image: ^2.0.1
   provider: ^6.0.5
 
 
@@ -79,7 +80,7 @@ flutter:
   fonts:
     - family: iconfont
       fonts:
-        - asset: assets/fonts/font_931388_nfc911azmsq.ttf
+        - asset: assets/fonts/iconfont.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

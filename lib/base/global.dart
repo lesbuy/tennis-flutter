@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GlobalProvider with ChangeNotifier {
-  String _lang = "en";
+  String _lang = "zh";
   bool _isTest = false;
 
   String get lang => _lang;

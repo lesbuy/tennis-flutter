@@ -15,8 +15,8 @@ class Player extends StatefulWidget {
 }
 
 class _PlayerState extends State<Player> {
-  bool loading = false;
-  List<List<dynamic>> top10 = [[], []];
+  dynamic _selected_player;
+  final List<List<dynamic>> _top10 = [[], []];
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _PlayerState extends State<Player> {
     // fetchInitData();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchInitData();
+      // fetchInitData();
     });
   }
 
@@ -38,7 +38,7 @@ class _PlayerState extends State<Player> {
         officialRankTop10(context, "atp", disableLoading: true).then((data) {
       if (data["success"]) {
         setState(() {
-          top10[0] = data["data"];
+          _top10[0] = data["data"];
         });
       } else {
         loadingProvider.setErrorText(data["msg"]);
@@ -48,7 +48,7 @@ class _PlayerState extends State<Player> {
         officialRankTop10(context, "wta", disableLoading: true).then((data) {
       if (data["success"]) {
         setState(() {
-          top10[1] = data["data"];
+          _top10[1] = data["data"];
         });
       } else {
         loadingProvider.setErrorText(data["msg"]);
@@ -64,10 +64,10 @@ class _PlayerState extends State<Player> {
     List<dynamic> top10View = List.filled(2, null);
     for (int i = 0; i < 2; i++) {
       top10View[i] = Column(
-        children: top10[i].asMap().entries.map((entry) {
+        children: _top10[i].asMap().entries.map((entry) {
           int index = entry.key;
           Map item = entry.value;
-          if (index == 0 && top10[i].isNotEmpty) {
+          if (index == 0 && _top10[i].isNotEmpty) {
             // 在第0个位置添加SizedBox和图像，其它行只显示名字
             return Column(
               children: [
@@ -101,7 +101,12 @@ class _PlayerState extends State<Player> {
         ),
       ],
     );
-    var input = AutoComplete();
+    var input = AutoComplete(callback: (item) {
+      setState(() {
+        _selected_player = item;
+      });
+    });
+    
     var cw = Center(
       child: Column(
         children: <Widget>[
@@ -112,6 +117,7 @@ class _PlayerState extends State<Player> {
           ),
           top10Block,
           input,
+          Text(_selected_player != null ? "已选择：" + _selected_player["lo"] : ""),
         ],
       ),
     );

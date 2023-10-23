@@ -28,7 +28,7 @@ Future<String> httpGet(BuildContext context, String route,
         .get(Uri.parse(url), headers: headers)
         .timeout(Duration(seconds: timeout));
     if (response.statusCode == 200) {
-      return response.body;
+      return utf8.decode(response.bodyBytes);
     } else {
       return json.encode(<String, dynamic>{
         "success": false,

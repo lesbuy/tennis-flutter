@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coric_tennis/components/http.dart';
-import 'package:coric_tennis/components/loading.dart';
-import 'package:coric_tennis/components/assets.dart';
+import 'package:coric_tennis/base/http.dart';
+import 'package:coric_tennis/common/loading.dart';
+import 'package:coric_tennis/common/auto_complete.dart';
+import 'package:coric_tennis/common/assets.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class Player extends StatefulWidget {
@@ -27,20 +28,31 @@ class _PlayerState extends State<Player> {
     });
   }
 
+  // 初始化时获取男女top10
   void fetchInitData() async {
     final loadingProvider =
         Provider.of<LoadingProvider>(context, listen: false);
     loadingProvider.setText("加载球员");
     loadingProvider.loading();
-    final atpFuture = officialRankTop10("atp").then((data) {
-      setState(() {
-        top10[0] = data;
-      });
+    final atpFuture =
+        officialRankTop10(context, "atp", disableLoading: true).then((data) {
+      if (data["success"]) {
+        setState(() {
+          top10[0] = data["data"];
+        });
+      } else {
+        loadingProvider.setErrorText(data["msg"]);
+      }
     });
-    final wtaFuture = officialRankTop10("wta").then((data) {
-      setState(() {
-        top10[1] = data;
-      });
+    final wtaFuture =
+        officialRankTop10(context, "wta", disableLoading: true).then((data) {
+      if (data["success"]) {
+        setState(() {
+          top10[1] = data["data"];
+        });
+      } else {
+        loadingProvider.setErrorText(data["msg"]);
+      }
     });
     Future.wait([atpFuture, wtaFuture]).then((_) {
       loadingProvider.deloading();
@@ -56,20 +68,25 @@ class _PlayerState extends State<Player> {
           int index = entry.key;
           Map item = entry.value;
           if (index == 0 && top10[i].isNotEmpty) {
-            // 在第0个位置添加SizedBox和图像
+            // 在第0个位置添加SizedBox和图像，其它行只显示名字
             return Column(
               children: [
-                SizedBox(
-                  child: FadeInImage.memoryNetwork(
-                    placeholder: kTransparentImage,
-                    image: ImgPt(item["pid"]),
-                      width: 100, height: 100),
+                // 若施回点击动作，需要用GestureDetector包起来
+                GestureDetector(
+                  onTap: () {},
+                  child: SizedBox(
+                    child: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: ImgPt(item["pid"]),
+                        width: 100,
+                        height: 100),
+                  ),
                 ),
-                Text(item["eng_name"]),
+                Text(item["name"]),
               ],
             );
           } else {
-            return Text(item["eng_name"]);
+            return Text(item["name"]);
           }
         }).toList(),
       );
@@ -84,6 +101,7 @@ class _PlayerState extends State<Player> {
         ),
       ],
     );
+    var input = AutoComplete();
     var cw = Center(
       child: Column(
         children: <Widget>[
@@ -93,6 +111,7 @@ class _PlayerState extends State<Player> {
             backgroundColor: Colors.amber[400],
           ),
           top10Block,
+          input,
         ],
       ),
     );

@@ -46,7 +46,7 @@ class LoadingProvider with ChangeNotifier {
       deloading();
     }
     errorText = text;
-    Future.delayed(Duration(seconds: 2)).then((_) {
+    Future.delayed(const Duration(seconds: 2)).then((_) {
       if (errorText != "") {
         errorText = "";
         notifyListeners(); // 通知监听者状态已更改
@@ -96,12 +96,12 @@ class LoadingOverlay extends StatelessWidget {
           Center(
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(108, 0, 0, 0),
+                color: const Color.fromARGB(108, 0, 0, 0),
                 borderRadius: BorderRadius.circular(10), // 设置边框圆角半径
               ),
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Text(loadingProvider.errorText,
-                  style: TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white)),
             ),
           ),
       ],

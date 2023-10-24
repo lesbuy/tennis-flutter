@@ -10,11 +10,12 @@ import 'package:coric_tennis/common/loading.dart';
 Future<dynamic> getPlayerList(BuildContext context, String name,
     {int? gender, int? timeout}) async {
   Map<String, String> params = {"name": name};
-  if (gender != null) {
+  if (gender != null && gender > 0) {
     params["gender"] = gender.toString();
   }
   final response = await httpGet(context, "profile/search",
       params: params, timeout: timeout);
+  // print(response);
   if (response.isNotEmpty) {
     try {
       final j = json.decode(response);

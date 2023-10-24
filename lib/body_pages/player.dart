@@ -15,7 +15,7 @@ class Player extends StatefulWidget {
 }
 
 class _PlayerState extends State<Player> {
-  dynamic _selected_player;
+  dynamic _selectedPlayer;
   final List<List<dynamic>> _top10 = [[], []];
 
   @override
@@ -77,7 +77,7 @@ class _PlayerState extends State<Player> {
                   child: SizedBox(
                     child: FadeInImage.memoryNetwork(
                         placeholder: kTransparentImage,
-                        image: ImgPt(item["pid"]),
+                        image: imgPt(item["pid"]),
                         width: 100,
                         height: 100),
                   ),
@@ -103,21 +103,21 @@ class _PlayerState extends State<Player> {
     );
     var input = AutoComplete(callback: (item) {
       setState(() {
-        _selected_player = item;
+        _selectedPlayer = item;
       });
     });
-    
+
     var cw = Center(
       child: Column(
         children: <Widget>[
           AppBar(
             //导航栏
-            title: Text("PLAYERS"),
+            title: const Text("PLAYERS"),
             backgroundColor: Colors.amber[400],
           ),
           top10Block,
           input,
-          Text(_selected_player != null ? "已选择：" + _selected_player["lo"] : ""),
+          Text(_selectedPlayer != null ? "已选择：${_selectedPlayer["le"]}" : ""),
         ],
       ),
     );

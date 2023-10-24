@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:coric_tennis/common/image.dart';
 
 class Tour extends StatefulWidget {
   const Tour({Key? key}) : super(key: key);
@@ -7,11 +8,18 @@ class Tour extends StatefulWidget {
 }
 
 class _TourState extends State<Tour> {
+  List<Widget> svgWidgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "赛事页面",
+    return Center(
+      child: Wrap(
+        children: [IocFlag("CHN", height: 50)],
       ),
     );
   }

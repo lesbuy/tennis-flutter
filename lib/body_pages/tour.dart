@@ -19,7 +19,7 @@ class _TourState extends State<Tour> {
   Widget build(BuildContext context) {
     return Center(
       child: Wrap(
-        children: [IocFlag("CHN", height: 50)],
+        children: [IocFlag("CHN", height: 30)],
       ),
     );
   }

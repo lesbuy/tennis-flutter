@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:coric_tennis/base/pair.dart';
 
-String iocFlags = "assets/images/flag/flags.webp";
+String iocFlags(int h) {
+  return "assets/images/flag/flags$h.webp";
+}
 
 Map<String, Pair<double, double>> findMap = {
   "AFG": Pair(-1, -1),
@@ -276,24 +278,23 @@ class IocFlag extends StatelessWidget {
     } else {
       pos = Pair(1, 1);
     }
-    final h = height ?? 20.0;
-    return Container(
+    final h = height ?? 30.0;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular((h * 0.13).roundToDouble()), // 设置圆角半径
+      child: Container(
         decoration: BoxDecoration(
           border: Border.all(width: 0.5, color: Colors.grey), // 灰色描边
-          borderRadius: BorderRadius.circular(2.0), // 圆角半径为2
         ),
-        child: FractionallySizedBox(
-            alignment: Alignment.center, // 设置变换的中心点
-            widthFactor: h / 30.0, // 设置宽度缩放系数
-            heightFactor: h / 30.0, // 设置高度缩放系数
-            child: SizedBox(
-              height: 30,
-              width: 40,
-              child: Image.asset(
-                iocFlags,
-                alignment: Alignment(pos!.first, pos.second),
-                fit: BoxFit.none,
-              ),
-            )));
+        child: SizedBox(
+          height: h - 1,
+          width: h * 4 / 3 - 1,
+          child: Image.asset(
+            iocFlags(h.toInt()),
+            alignment: Alignment(pos!.first, pos.second),
+            fit: BoxFit.none,
+          ),
+        ),
+      ),
+    );
   }
 }

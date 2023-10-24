@@ -5,6 +5,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:async';
 import 'package:coric_tennis/base/http.dart';
 import 'package:coric_tennis/common/image.dart';
+import 'package:coric_tennis/common/iconfont.dart';
 
 class AutoComplete extends StatefulWidget {
   final Function(dynamic) callback;
@@ -106,8 +107,15 @@ class _AutoCompleteState extends State<AutoComplete> {
           controller: _textDelayController,
           focusNode: _focusNode,
           keyboardType: TextInputType.text,
-          decoration: const InputDecoration(
-              labelText: 'Input', border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            fillColor: Colors.black12,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50.0), // 设置边框圆角
+              borderSide: BorderSide.none, // 去掉默认的边框
+            ),
+            prefixIcon: const Icon(IconFont.query),
+          ),
         ),
         suggestionsCallback: (pattern) {
           return _candidates;
@@ -119,7 +127,10 @@ class _AutoCompleteState extends State<AutoComplete> {
               spacing: 3,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                IocFlag(suggestion["i"]),
+                IocFlag(
+                  suggestion["i"],
+                  height: 20,
+                ),
                 Text(
                   suggestion["lo"],
                   style: const TextStyle(fontSize: 15),

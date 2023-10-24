@@ -25,4 +25,6 @@ class IconFont {
       IconData(0xe639, fontFamily: 'iconfont', matchTextDirection: true);
   static const IconData score =
       IconData(0xe689, fontFamily: 'iconfont', matchTextDirection: true);
+  static const IconData query =
+      IconData(0xe602, fontFamily: 'iconfont', matchTextDirection: true);
 }

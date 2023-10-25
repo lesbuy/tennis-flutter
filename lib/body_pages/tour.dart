@@ -19,7 +19,21 @@ class _TourState extends State<Tour> {
   Widget build(BuildContext context) {
     return Center(
       child: Wrap(
-        children: [IocFlag("CHN", height: 30)],
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          IocFlag("CHN", height: 30),
+          Headshot(
+            "328120",
+            height: 100,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(100))),
+          ),
+          Portrait(
+            "328120",
+            height: 300,
+            width: 300,
+          )
+        ],
       ),
     );
   }

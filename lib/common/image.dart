@@ -1,8 +1,18 @@
+import 'package:coric_tennis/base/http_base.dart';
 import 'package:flutter/material.dart';
 import 'package:coric_tennis/base/pair.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 String iocFlags(int h) {
   return "assets/images/flag/flags$h.webp";
+}
+
+String playerHeadshot(String pid) {
+  return [staticRoot, "pic", "hs", pid].join("/");
+}
+
+String playerPortrait(String pid) {
+  return [staticRoot, "pic", "pt", pid].join("/");
 }
 
 Map<String, Pair<double, double>> findMap = {
@@ -295,6 +305,76 @@ class IocFlag extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class Headshot extends StatelessWidget {
+  final String pid;
+  final double? height;
+  final double? borderRadius;
+  final BoxDecoration? decoration;
+
+  const Headshot(this.pid,
+      {super.key, this.height, this.borderRadius, this.decoration});
+
+  @override
+  Widget build(BuildContext context) {
+    final h = height ?? 50;
+    final r = borderRadius ?? 0;
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(r),
+        child: Container(
+          height: h,
+          width: h,
+          decoration: decoration,
+          child: Stack(children: [
+            FutureBuilder(
+              future: precacheImage(NetworkImage(playerHeadshot(pid)), context),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return const SizedBox.shrink(); // 隐藏占位符
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+            FadeInImage.memoryNetwork(
+              image: playerHeadshot(pid),
+              placeholder: kTransparentImage,
+              fit: BoxFit.cover,
+              fadeInDuration: const Duration(milliseconds: 30),
+            )
+          ]),
+        ));
+  }
+}
+
+class Portrait extends StatelessWidget {
+  final String pid;
+  final double? height;
+  final double? width;
+  final BoxDecoration? decoration;
+
+  const Portrait(this.pid,
+      {super.key, this.height, this.width, this.decoration});
+
+  @override
+  Widget build(BuildContext context) {
+    final h = height ?? 100;
+    final w = width ?? h;
+    return Container(
+      height: h,
+      width: w,
+      decoration: decoration,
+      child: Stack(children: [
+        const Center(child: CircularProgressIndicator()),
+        FadeInImage.memoryNetwork(
+          image: playerPortrait(pid),
+          placeholder: kTransparentImage,
+          fit: BoxFit.fitHeight,
+        )
+      ]),
     );
   }
 }

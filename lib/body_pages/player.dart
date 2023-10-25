@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:coric_tennis/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coric_tennis/base/http.dart';
@@ -17,6 +18,8 @@ class Player extends StatefulWidget {
 class _PlayerState extends State<Player> {
   dynamic _selectedPlayer;
   final List<List<dynamic>> _top10 = [[], []];
+  final List<String> _favPlayers = ["230234", "328120", "322222"];
+  final List<Widget> _favPlayersWidgets = [];
 
   @override
   void initState() {
@@ -34,6 +37,8 @@ class _PlayerState extends State<Player> {
         Provider.of<LoadingProvider>(context, listen: false);
     loadingProvider.setText("加载球员");
     loadingProvider.loading();
+
+    // 加载男女Top10
     final atpFuture =
         officialRankTop10(context, "atp", disableLoading: true).then((data) {
       if (data["success"]) {
@@ -54,6 +59,21 @@ class _PlayerState extends State<Player> {
         loadingProvider.setErrorText(data["msg"]);
       }
     });
+
+    // 加载星标球员
+    Future.delayed(const Duration(milliseconds: 800), () {
+      setState(() {
+        _favPlayers.map((e) {
+          _favPlayersWidgets.add(Headshot(
+            e,
+            height: 80,
+            borderRadius: 50,
+            decoration: const BoxDecoration(color: Colors.grey),
+          ));
+        });
+      });
+    });
+
     Future.wait([atpFuture, wtaFuture]).then((_) {
       loadingProvider.deloading();
     });
@@ -61,6 +81,7 @@ class _PlayerState extends State<Player> {
 
   @override
   Widget build(BuildContext context) {
+    // top10版块
     List<dynamic> top10View = List.filled(2, null);
     for (int i = 0; i < 2; i++) {
       top10View[i] = Column(
@@ -101,12 +122,31 @@ class _PlayerState extends State<Player> {
         ),
       ],
     );
+
+    // 球员搜索条
     var input = AutoComplete(callback: (item) {
       setState(() {
         _selectedPlayer = item;
       });
     });
 
+    var myPlayers = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const ListTile(
+          title: Text("My Players"),
+        ),
+        Padding(
+            padding: const EdgeInsets.only(left: 24),
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: _favPlayersWidgets,
+            )),
+      ],
+    );
+
+    // 主界面
     var cw = Center(
       child: Column(
         children: <Widget>[
@@ -118,6 +158,7 @@ class _PlayerState extends State<Player> {
           top10Block,
           input,
           Text(_selectedPlayer != null ? "已选择：${_selectedPlayer["le"]}" : ""),
+          myPlayers,
         ],
       ),
     );

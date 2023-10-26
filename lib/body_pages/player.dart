@@ -4,8 +4,10 @@ import 'package:coric_tennis/common/image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:coric_tennis/base/http.dart';
+import 'package:coric_tennis/base/pair.dart';
 import 'package:coric_tennis/common/loading.dart';
 import 'package:coric_tennis/common/auto_complete.dart';
+import 'package:coric_tennis/common/table.dart';
 import 'package:coric_tennis/common/assets.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -25,13 +27,26 @@ class Player extends StatefulWidget {
 
 class _PlayerState extends State<Player> {
   dynamic _selectedPlayer;
-  final List<List<dynamic>> _top10 = [[], []];
+  final List<List<dynamic>> _top5Array = [[], []];
   final List<String> _favPlayers = ["230234", "328120", "322222"];
   List<Widget> _favPlayersWidgets = [];
+  PDataTable? _top5;
+
+  final List<Pair<String, String>> _schema = [
+    Pair("ID", "id"),
+    Pair("FRank", "f_rank"),
+    Pair("CRank", "c_rank"),
+    Pair("Point", "point"),
+    Pair("F", "first"),
+    Pair("L", "last"),
+    Pair("IOC", "ioc"),
+    Pair("Age", "age"),
+  ];
 
   @override
   void initState() {
     super.initState();
+    _top5 = generateTop5();
     // fetchInitData();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,29 +54,37 @@ class _PlayerState extends State<Player> {
     });
   }
 
+  PDataTable generateTop5() {
+    return PDataTable(
+      schema: _schema,
+      rows: _top5Array[0],
+    );
+  }
+
   // 初始化时获取男女top10
   void fetchInitData() async {
     final loadingProvider =
         Provider.of<LoadingProvider>(context, listen: false);
-    loadingProvider.setText("loading...");
+    loadingProvider.setText("");
     loadingProvider.loading();
 
     // 加载男女Top10
     final atpFuture =
-        officialRankTop10(context, "atp", disableLoading: true).then((data) {
+        liveRank(context, "atp", disableLoading: true).then((data) {
       if (data["success"]) {
         setState(() {
-          _top10[0] = data["data"];
+          _top5Array[0] = data["data"];
+          _top5 = generateTop5();
         });
       } else {
         loadingProvider.setErrorText(data["msg"]);
       }
     });
     final wtaFuture =
-        officialRankTop10(context, "wta", disableLoading: true).then((data) {
+        liveRank(context, "wta", disableLoading: true).then((data) {
       if (data["success"]) {
         setState(() {
-          _top10[1] = data["data"];
+          _top5Array[1] = data["data"];
         });
       } else {
         loadingProvider.setErrorText(data["msg"]);
@@ -113,55 +136,7 @@ class _PlayerState extends State<Player> {
       ],
     );
 
-    // 版块3：排名
-    List<dynamic> top10View = List.filled(2, null);
-    for (int i = 0; i < 2; i++) {
-      top10View[i] = Column(
-        children: _top10[i].asMap().entries.map((entry) {
-          int index = entry.key;
-          Map item = entry.value;
-          if (index == 0 && _top10[i].isNotEmpty) {
-            // 在第0个位置添加SizedBox和图像，其它行只显示名字
-            return Column(
-              children: [
-                // 若施回点击动作，需要用GestureDetector包起来
-                GestureDetector(
-                  onTap: () {},
-                  child: SizedBox(
-                    child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: imgPt(item["pid"]),
-                        width: 100,
-                        height: 100),
-                  ),
-                ),
-                Text(item["name"]),
-              ],
-            );
-          } else {
-            return Text(item["name"]);
-          }
-        }).toList(),
-      );
-    }
-    var top10Block = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const ListTile(
-          title: Text("Rankings"),
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: top10View[0],
-            ),
-            Expanded(
-              child: top10View[1],
-            ),
-          ],
-        )
-      ],
-    );
+    // 版块3：top5排名
 
     // 主界面
     var cw = ListView(
@@ -177,7 +152,7 @@ class _PlayerState extends State<Player> {
         divider,
         myPlayers,
         divider,
-        top10Block,
+        _top5 ?? const SizedBox(),
       ],
     );
     return cw;

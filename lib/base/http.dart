@@ -35,8 +35,8 @@ Future<dynamic> getPlayerList(BuildContext context, String name,
   return j;
 }
 
-// 读取官方排名top10
-Future<dynamic> officialRankTop10(BuildContext context, String gender,
+// 读取官方排名top5
+Future<dynamic> officialRankTop5(BuildContext context, String gender,
     {int? timeout, bool? disableLoading}) async {
   Object body = {
     "association": gender,
@@ -54,6 +54,66 @@ Future<dynamic> officialRankTop10(BuildContext context, String gender,
   }
   final response = await httpPost(context, "official/paginate",
       body: body, timeout: timeout);
+  if (response.isNotEmpty) {
+    try {
+      final j = json.decode(response);
+      return j;
+    } catch (e) {
+      final j = <String, dynamic>{
+        "success": false,
+        "msg": "Error: $e",
+      };
+      if (disableLoading != true) {
+        loadingProvider.setErrorText(j["msg"]);
+        loadingProvider.loading();
+      }
+      return j;
+    } finally {
+      if (disableLoading != true) {
+        loadingProvider.deloading();
+      }
+    }
+  }
+  final j = <String, dynamic>{
+    "success": false,
+    "msg": "Error: Get NULL",
+  };
+  if (disableLoading != true) {
+    loadingProvider.setErrorText(j["msg"]);
+    loadingProvider.loading();
+  }
+  return j;
+}
+
+// 读取即时排名top5
+Future<dynamic> liveRank(BuildContext context, String gender,
+    {int? timeout,
+    bool? disableLoading,
+    int page = 0,
+    int pageSize = 50,
+    String sd = "s",
+    String period = "year"}) async {
+  Object body = {
+    "association": gender,
+    "sd": sd,
+    "period": period,
+    "start": page * pageSize,
+    "length": pageSize,
+    "draw": 2,
+    "columns": [
+      {"name": "c_rank"}
+    ],
+    "order": [
+      {"column": 0, "dir": "asc"}
+    ]
+  };
+  final loadingProvider = Provider.of<LoadingProvider>(context, listen: false);
+  if (disableLoading != true) {
+    loadingProvider.setText("loading...");
+    loadingProvider.loading();
+  }
+  final response =
+      await httpPost(context, "rank/paginate", body: body, timeout: timeout);
   if (response.isNotEmpty) {
     try {
       final j = json.decode(response);

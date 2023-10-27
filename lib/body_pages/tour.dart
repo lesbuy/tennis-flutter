@@ -17,7 +17,7 @@ class _TourState extends State<Tour> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [

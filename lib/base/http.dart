@@ -90,7 +90,7 @@ Future<dynamic> liveRank(BuildContext context, String gender,
     {int? timeout,
     bool? disableLoading,
     int page = 0,
-    int pageSize = 50,
+    int pageSize = 5,
     String sd = "s",
     String period = "year"}) async {
   Object body = {
@@ -112,8 +112,8 @@ Future<dynamic> liveRank(BuildContext context, String gender,
     loadingProvider.setText("loading...");
     loadingProvider.loading();
   }
-  final response =
-      await httpPost(context, "rank/paginate", body: body, timeout: timeout);
+  final response = await httpPost(context, "rank/paginate_old",
+      body: body, timeout: timeout);
   if (response.isNotEmpty) {
     try {
       final j = json.decode(response);

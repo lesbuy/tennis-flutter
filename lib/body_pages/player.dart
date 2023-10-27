@@ -8,8 +8,6 @@ import 'package:coric_tennis/base/pair.dart';
 import 'package:coric_tennis/common/loading.dart';
 import 'package:coric_tennis/common/auto_complete.dart';
 import 'package:coric_tennis/common/table.dart';
-import 'package:coric_tennis/common/assets.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 var divider = Container(
     margin: const EdgeInsets.only(top: 12, bottom: 12),
@@ -32,21 +30,55 @@ class _PlayerState extends State<Player> {
   List<Widget> _favPlayersWidgets = [];
   PDataTable? _top5;
 
-  final List<Pair<String, String>> _schema = [
-    Pair("ID", "id"),
-    Pair("FRank", "f_rank"),
-    Pair("CRank", "c_rank"),
-    Pair("Point", "point"),
-    Pair("F", "first"),
-    Pair("L", "last"),
-    Pair("IOC", "ioc"),
-    Pair("Age", "age"),
+  final List<Pair<String, dynamic>> _schema = [
+    Pair("R", {
+      "col": "c_rank",
+      "hidden": false,
+      "digit": false,
+    }),
+    Pair("IOC", {
+      "col": "ioc",
+      "hidden": false,
+      "digit": false,
+      "flag": true,
+    }),
+    Pair("Name", {
+      "col": "id",
+      "hidden": false,
+      "digit": false,
+      "mapFunc": (e) {
+        return e["sh"];
+      },
+    }),
+    Pair("ID", {
+      "col": "id",
+      "hidden": true,
+      "digit": false,
+    }),
+    Pair("Point", {
+      "col": "point",
+      "hidden": false,
+      "digit": true,
+    }),
+    Pair("Age", {
+      "col": "age",
+      "hidden": false,
+      "digit": true,
+      "itemFunc": (e) {
+        return e / 10;
+      },
+    }),
+    Pair("Birth", {
+      "col": "birth",
+      "hidden": false,
+      "digit": false,
+    }),
   ];
 
   @override
   void initState() {
     super.initState();
-    _top5 = generateTop5();
+    _top5 = generateTop5(_schema, [], {});
     // fetchInitData();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -54,10 +86,12 @@ class _PlayerState extends State<Player> {
     });
   }
 
-  PDataTable generateTop5() {
+  PDataTable generateTop5(List<Pair<String, dynamic>> schema,
+      List<dynamic> rows, Map<String, dynamic> infoMap) {
     return PDataTable(
-      schema: _schema,
-      rows: _top5Array[0],
+      schema: schema,
+      rows: rows,
+      infoMap: infoMap,
     );
   }
 
@@ -74,7 +108,6 @@ class _PlayerState extends State<Player> {
       if (data["success"]) {
         setState(() {
           _top5Array[0] = data["data"];
-          _top5 = generateTop5();
         });
       } else {
         loadingProvider.setErrorText(data["msg"]);
@@ -85,6 +118,7 @@ class _PlayerState extends State<Player> {
       if (data["success"]) {
         setState(() {
           _top5Array[1] = data["data"];
+          _top5 = generateTop5(_schema, _top5Array[1], data["players"]);
         });
       } else {
         loadingProvider.setErrorText(data["msg"]);
@@ -137,6 +171,15 @@ class _PlayerState extends State<Player> {
     );
 
     // 版块3：top5排名
+    var top5Block = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const ListTile(
+          title: Text("Rankings"),
+        ),
+        Container(child: _top5 ?? const SizedBox()),
+      ],
+    );
 
     // 主界面
     var cw = ListView(
@@ -152,7 +195,7 @@ class _PlayerState extends State<Player> {
         divider,
         myPlayers,
         divider,
-        _top5 ?? const SizedBox(),
+        top5Block,
       ],
     );
     return cw;
